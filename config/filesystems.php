@@ -42,10 +42,10 @@ return [
 	*/
 
 	'disks' => [
-
+	
 		'local' => [
 			'driver' => 'local',
-			'root'   => storage_path().'/app',
+			'root'   => env('DISK_ROOT', storage_path().'/app'),
 		],
 
 		's3' => [

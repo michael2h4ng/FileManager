@@ -1,5 +1,7 @@
 <?php namespace App\Http\Controllers;
 
+use \Storage;
+
 class HomeController extends Controller {
 
 	/*
@@ -28,8 +30,10 @@ class HomeController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function index()
+	public function index($path = '/')
 	{
+		dd(Storage::allFiles($path));
+		
 		return view('home');
 	}
 
