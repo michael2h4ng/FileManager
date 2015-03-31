@@ -1,6 +1,6 @@
 <?php namespace App\Http\Controllers;
 
-use \Storage;
+use App\FileManager\FileManager;
 
 class HomeController extends Controller {
 
@@ -20,9 +20,10 @@ class HomeController extends Controller {
 	 *
 	 * @return void
 	 */
-	public function __construct()
+	public function __construct(FileManager $fileManager)
 	{
 		$this->middleware('auth');
+        $this->fileManager = $fileManager;
 	}
 
 	/**
@@ -32,9 +33,10 @@ class HomeController extends Controller {
 	 */
 	public function index($path = '/')
 	{
-		dd(Storage::allFiles($path));
-		
-		return view('home');
+        $directories = $this->fileManager->getDirectories($path);
+        $files = $this->fileManager->getFiles($path);
+
+		return view('home', compact('path', 'directories', 'files'));
 	}
 
 }
