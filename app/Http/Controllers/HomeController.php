@@ -1,6 +1,8 @@
 <?php namespace App\Http\Controllers;
 
 use App\FileManager\FileManager;
+use App\FileManager\File\File;
+use App\FileManager\Directory\Directory;
 
 class HomeController extends Controller {
 
@@ -20,10 +22,12 @@ class HomeController extends Controller {
 	 *
 	 * @return void
 	 */
-	public function __construct(FileManager $fileManager)
+	public function __construct(FileManager $fileManager, File $file, Directory $directory)
 	{
 		$this->middleware('auth');
         $this->fileManager = $fileManager;
+        $this->file = $file;
+        $this->directory = $directory;
 	}
 
 	/**
@@ -33,8 +37,8 @@ class HomeController extends Controller {
 	 */
 	public function index($path = '/')
 	{
-        $directories = $this->fileManager->getDirectories($path);
-        $files = $this->fileManager->getFiles($path);
+        $directories = $this->directory->getDirectoriesWithMeta($path);
+        $files = $this->file->getFilesWithMeta($path);
 
 		return view('home', compact('path', 'directories', 'files'));
 	}

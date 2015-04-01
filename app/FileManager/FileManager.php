@@ -3,6 +3,8 @@
 use \Model;
 use \Storage;
 use McCool\LaravelAutoPresenter\HasPresenter;
+use App\FileManager\File\File;
+use App\FileManager\Directory\Directory;
 
 class FileManager extends Model implements HasPresenter {
 
@@ -15,16 +17,6 @@ class FileManager extends Model implements HasPresenter {
 
     protected $casts = [];
 
-    public function getFiles($path)
-    {
-        return Storage::Files($path);
-    }
-
-    public function getDirectories($path)
-
-    {
-        return Storage::Directories($path);
-    }
     /**
      * @return string The path to the presenter class
      */
