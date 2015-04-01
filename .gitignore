@@ -3,4 +3,6 @@
 /.idea
 .env
 .DS_Store
-/public
+/public/js
+/public/css
+
