@@ -2,10 +2,9 @@
 
 use \Storage;
 use App\FileManager\AbstractObject;
-use McCool\LaravelAutoPresenter\HasPresenter;
 use Illuminate\Database\Eloquent\Collection;
 
-class Directory extends AbstractObject implements HasPresenter {
+class Directory extends AbstractObject {
 
     /**
      * The attributes excluded from the model's JSON form.
@@ -29,6 +28,7 @@ class Directory extends AbstractObject implements HasPresenter {
     public function getObjectMeta($name)
     {
         return new Directory(['name' => $name,
+                              'path' => $name,
                               'type' => 'directory',
                               'lastModified' => $this->getLastModified($name)
                     ]);

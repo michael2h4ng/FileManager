@@ -21,7 +21,7 @@
                             <div class="icon-main"></div>
                         </div>
                         <div class="name-container">
-                            <div role="button" class="name text-primary" title="{{{ $object->name }}}">{{{ $object->name }}}</div>
+                            <div role="button" class="name text-primary" title="{{{ $object->name }}}"><a href="{{{ $object->url }}}">{{{ $object->name }}}</a></div>
                             <div class="meta-info text-muted">{{{ $object->lastModified }}}</div>
                         </div>
                     </div>

@@ -2,10 +2,10 @@
 
 use \Storage;
 use App\FileManager\AbstractObject;
-use McCool\LaravelAutoPresenter\HasPresenter;
+
 use Illuminate\Database\Eloquent\Collection;
 
-class File extends AbstractObject implements HasPresenter {
+class File extends AbstractObject {
 
     /**
      * The attributes excluded from the model's JSON form.
@@ -39,6 +39,7 @@ class File extends AbstractObject implements HasPresenter {
     public function getObjectMeta($name)
     {
         return new File(['name' => $name,
+                         'path' => $name,
                          'type' => 'file',
                          'ext'  => 'ext',
                          'mine' => $this->getMimetype($name),

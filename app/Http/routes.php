@@ -11,7 +11,7 @@
 |
 */
 
-Route::get('/{path?}', 'HomeController@index'); // Optional route parameters
+Route::get('/{path?}', 'HomeController@index')->where('path', '(.*)'); // Optional route parameters
 
 Route::controllers([
 	'auth' => 'Auth\AuthController',

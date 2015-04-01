@@ -3,7 +3,7 @@
 use \Model;
 use McCool\LaravelAutoPresenter\HasPresenter;
 
-abstract class AbstractObject extends Model {
+abstract class AbstractObject extends Model implements HasPresenter {
 
     protected $hidden;
     protected $casts;
@@ -12,5 +12,6 @@ abstract class AbstractObject extends Model {
     abstract public function getLastModified($name);
     abstract public function getObjectMeta($name);
     abstract public function getAllWithMeta($path, $sortBy);
+    abstract public function getPresenterClass();
 
 }

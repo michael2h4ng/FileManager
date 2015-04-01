@@ -16,4 +16,9 @@ class DirectoryPresenter extends BasePresenter {
 
         return Carbon::createFromTimeStamp($lastModified)->diffForHumans();
     }
+
+    public function url()
+    {
+    	return action('HomeController@index', [$this->path]);
+    }
 }

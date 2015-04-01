@@ -1,10 +1,9 @@
 <?php namespace App\FileManager;
 
 use \Model;
-use \Storage;
-use McCool\LaravelAutoPresenter\HasPresenter;
 use App\FileManager\File\File;
 use App\FileManager\Directory\Directory;
+use McCool\LaravelAutoPresenter\HasPresenter;
 
 class FileManager extends Model implements HasPresenter {
 
