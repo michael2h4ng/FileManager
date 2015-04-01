@@ -1,6 +1,7 @@
 <?php namespace App\FileManager\Directory;
 
 use McCool\LaravelAutoPresenter\BasePresenter;
+use Carbon\Carbon;
 
 class DirectoryPresenter extends BasePresenter {
 
@@ -9,4 +10,10 @@ class DirectoryPresenter extends BasePresenter {
         $this->wrappedObject = $resource;
     }
 
+    public function lastModified()
+    {
+        $lastModified = $this->wrappedObject->lastModified;
+
+        return Carbon::createFromTimeStamp($lastModified)->diffForHumans();
+    }
 }
