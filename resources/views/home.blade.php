@@ -12,31 +12,17 @@
         </div>
     </div>
 
-	<div class="row">
-        @foreach ($directories as $directory)
-            <div class="col-xs-4 col-sm-3 col-md-2">
-                <div role="button" class="object directory">
-                    <div class="icon-container">
-                        <div class="icon-base directory"></div>
-                    </div>
-                    <div class="name-container">
-                        <div role="button" class="name text-primary" title="{{{ $directory->dirName }}}">{{{ $directory->dirName }}}</div>
-                        <div class="meta-info text-muted">{{{ $directory->lastModified }}}</div>
-                    </div>
-                </div>
-            </div>
-        @endforeach
-
-        @foreach ($files as $file)
+	<div id="file_system" class="row">
+        @foreach ($objects as $object)
                 <div class="col-xs-4 col-sm-3 col-md-2">
-                    <div class="object directory">
+                    <div class="object">
                         <div class="icon-container">
-                            <div class="icon-base file"></div>
+                            <div class="icon-base {{{ $object->type }}}"></div>
                             <div class="icon-main"></div>
                         </div>
                         <div class="name-container">
-                            <div role="button" class="name text-primary" title="{{{ $file->fileName }}}">{{{ $file->fileName }}}</div>
-                            <div class="meta-info text-muted">{{{ $file->lastModified }}}</div>
+                            <div role="button" class="name text-primary" title="{{{ $object->name }}}">{{{ $object->name }}}</div>
+                            <div class="meta-info text-muted">{{{ $object->lastModified }}}</div>
                         </div>
                     </div>
                 </div>

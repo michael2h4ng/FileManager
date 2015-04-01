@@ -37,10 +37,9 @@ class HomeController extends Controller {
 	 */
 	public function index($path = '/')
 	{
-        $directories = $this->directory->getDirectoriesWithMeta($path);
-        $files = $this->file->getFilesWithMeta($path);
+		$objects = $this->fileManager->getAllWithMeta($path);
 
-		return view('home', compact('path', 'directories', 'files'));
+		return view('home', compact('path', 'objects'));
 	}
 
 }

@@ -1,11 +1,11 @@
 <?php namespace App\FileManager\Directory;
 
-use \Model;
 use \Storage;
+use App\FileManager\AbstractObject;
 use McCool\LaravelAutoPresenter\HasPresenter;
-use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent\Collection;
 
-class Directory extends Model implements HasPresenter {
+class Directory extends AbstractObject implements HasPresenter {
 
     /**
      * The attributes excluded from the model's JSON form.
@@ -16,34 +16,35 @@ class Directory extends Model implements HasPresenter {
 
     protected $casts = [];
 
-    public function getDirectories($path)
+    public function getAll($path)
     {
         return Storage::Directories($path);
     }
 
-    public function getLastModified($fileName)
+    public function getLastModified($name)
     {
-        return Storage::lastModified($fileName);
+        return Storage::lastModified($name);
     }
 
-    public function getDirectoryMeta($dirName)
+    public function getObjectMeta($name)
     {
-        return new Directory(['dirName' => $dirName,
-                      'lastModified' => $this->getLastModified($dirName)
+        return new Directory(['name' => $name,
+                              'type' => 'directory',
+                              'lastModified' => $this->getLastModified($name)
                     ]);
     }
 
-    public function getDirectoriesWithMeta($path)
+    public function getAllWithMeta($path, $sortBy = "name")
     {
-        $dirNames = $this->getDirectories($path);
-        $directories = array();
+        $names = $this->getAll($path);
+        $directories = new Collection();
 
-        foreach ($dirNames as $dirName)
+        foreach ($names as $name)
         {
-            $directories[] = $this->getDirectoryMeta($dirName);
+            $directories->add($this->getObjectMeta($name));
         }
 
-        return new Collection($directories);
+        return $directories->sortBy($sortBy);
     }
 
     /**

@@ -6248,11 +6248,11 @@ label,
   height: 120px;
 }
 .object .icon-container .icon-base.directory {
-  background: url("/images/directory.png") no-repeat center center / contain;
+  background: url("../images/directory.png") no-repeat center center / contain;
   background-size: 85% 85%;
 }
 .object .icon-container .icon-base.file {
-  background: url("/images/file.png") no-repeat center center / contain;
+  background: url("../images/file.png") no-repeat center center / contain;
 }
 .object .name-container {
   margin-top: 10px;

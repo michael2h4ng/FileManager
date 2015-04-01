@@ -1,11 +1,11 @@
 <?php namespace App\FileManager\File;
 
-use \Model;
 use \Storage;
+use App\FileManager\AbstractObject;
 use McCool\LaravelAutoPresenter\HasPresenter;
-use Illuminate\Support\Collection;
+use Illuminate\Database\Eloquent\Collection;
 
-class File extends Model implements HasPresenter {
+class File extends AbstractObject implements HasPresenter {
 
     /**
      * The attributes excluded from the model's JSON form.
@@ -16,40 +16,48 @@ class File extends Model implements HasPresenter {
 
     protected $casts = [];
 
-    public function getFiles($path)
+    public function getAll($path)
     {
         return Storage::Files($path);
     }
 
-    public function getFileSize($fileName)
+    public function getFileSize($name)
     {
-        return Storage::size($fileName);
+        return Storage::size($name);
     }
 
-    public function getLastModified($fileName)
+    public function getLastModified($name)
     {
-        return Storage::lastModified($fileName);
+        return Storage::lastModified($name);
     }
 
-    public function getFileMeta($fileName)
+    public function getMimetype($name)
     {
-        return new File(['fileName' => $fileName,
-                      'fileSize' => $this->getFileSize($fileName),
-                      'lastModified' => $this->getLastModified($fileName)
+        return Storage::Mimetype($name);
+    }
+
+    public function getObjectMeta($name)
+    {
+        return new File(['name' => $name,
+                         'type' => 'file',
+                         'ext'  => 'ext',
+                         'mine' => $this->getMimetype($name),
+                         'fileSize' => $this->getFileSize($name),
+                         'lastModified' => $this->getLastModified($name)
                     ]);
     }
 
-    public function getFilesWithMeta($path)
+    public function getAllWithMeta($path, $sortBy = "name")
     {
-        $fileNames = $this->getFiles($path);
-        $files = array();
+        $names = $this->getAll($path);
+        $files = new Collection();
 
-        foreach ($fileNames as $fileName)
+        foreach ($names as $name)
         {
-            $files[] = $this->getFileMeta($fileName);
+            $files->add($this->getObjectMeta($name));
         }
 
-        return new Collection($files);
+        return $files->sortBy($sortBy);
     }
 
     /**
