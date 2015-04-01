@@ -4,5 +4,39 @@
 @font-family-sans-serif: "Roboto", Helvetica, Arial, sans-serif;
 
 body, label, .checkbox label {
-	font-weight: 300;
+  font-weight: 300;
+}
+
+.object {
+  margin-bottom: 30px;
+  padding-top: 10px;
+
+  &:hover, &.selected {
+    background-color: #e8f6fe;
+    border-radius: 10px;
+  }
+
+  .icon-container {
+    overflow: hidden;
+
+    .icon-base {
+      height: 120px;
+    }
+
+    .icon-base.directory {
+      background: url("/images/directory.png") no-repeat center center /contain;
+      background-size: 85% 85%;
+    }
+
+    .icon-base.file {
+      background: url("/images/file.png") no-repeat center center /contain;
+    }
+  }
+
+  .name-container {
+    margin-top: 10px;
+    text-align: center;
+  }
+
+  overflow: hidden;
 }

@@ -6231,3 +6231,32 @@ label,
 .checkbox label {
   font-weight: 300;
 }
+.object {
+  margin-bottom: 30px;
+  padding-top: 10px;
+  overflow: hidden;
+}
+.object:hover,
+.object.selected {
+  background-color: #e8f6fe;
+  border-radius: 10px;
+}
+.object .icon-container {
+  overflow: hidden;
+}
+.object .icon-container .icon-base {
+  height: 120px;
+}
+.object .icon-container .icon-base.directory {
+  background: url("/images/directory.png") no-repeat center center / contain;
+  background-size: 85% 85%;
+}
+.object .icon-container .icon-base.file {
+  background: url("/images/file.png") no-repeat center center / contain;
+}
+.object .name-container {
+  margin-top: 10px;
+  text-align: center;
+}
+
+/*# sourceMappingURL=app.css.map */
