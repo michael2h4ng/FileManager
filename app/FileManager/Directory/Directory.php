@@ -15,22 +15,27 @@ class Directory extends AbstractObject {
 
     protected $casts = [];
 
+    public function getPathInfo($dirPath)
+    {
+        return pathinfo($dirPath);
+    }
+
     public function getAll($path)
     {
         return Storage::Directories($path);
     }
 
-    public function getLastModified($name)
+    public function getLastModified($dirPath)
     {
-        return Storage::lastModified($name);
+        return Storage::lastModified($dirPath);
     }
 
-    public function getObjectMeta($name)
+    public function getObjectMeta($dirPath)
     {
-        return new Directory(['name' => $name,
-                              'path' => $name,
+        return new Directory(['path' => $dirPath,
+                              'pathinfo' => $this->getPathInfo($dirPath),
                               'type' => 'directory',
-                              'lastModified' => $this->getLastModified($name)
+                              'lastModified' => $this->getLastModified($dirPath)
                     ]);
     }
 

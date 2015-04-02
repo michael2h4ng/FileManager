@@ -16,35 +16,50 @@ class File extends AbstractObject {
 
     protected $casts = [];
 
-    public function getAll($path)
+    public function getPathInfo($filePath)
     {
-        return Storage::Files($path);
+        return pathinfo($filePath);
     }
 
-    public function getFileSize($name)
+    public function isFileExsit($filePath)
     {
-        return Storage::size($name);
+        return Storage::disk(env('DISK_NAME', 'local'))->exists($filePath);
     }
 
-    public function getLastModified($name)
+    public function getFile($filePath)
     {
-        return Storage::lastModified($name);
+        return Storage::get($filePath);
     }
 
-    public function getMimetype($name)
+    public function getAll($dirPath)
     {
-        return Storage::Mimetype($name);
+        return Storage::Files($dirPath);
     }
 
-    public function getObjectMeta($name)
+    public function getFileSize($filePath)
     {
-        return new File(['name' => $name,
-                         'path' => $name,
+        return Storage::size($filePath);
+    }
+
+    public function getLastModified($filePath)
+    {
+        return Storage::lastModified($filePath);
+    }
+
+    public function getMimetype($filePath)
+    {
+        return Storage::Mimetype($filePath);
+    }
+
+    public function getObjectMeta($filePath)
+    {
+        return new File(['path' => $filePath,
+                         'pathinfo' => $this->getPathInfo($filePath),
                          'type' => 'file',
                          'ext'  => 'ext',
-                         'mine' => $this->getMimetype($name),
-                         'fileSize' => $this->getFileSize($name),
-                         'lastModified' => $this->getLastModified($name)
+                         'mine' => $this->getMimetype($filePath),
+                         'fileSize' => $this->getFileSize($filePath),
+                         'lastModified' => $this->getLastModified($filePath)
                     ]);
     }
 

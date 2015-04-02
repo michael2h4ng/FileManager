@@ -3,6 +3,7 @@
 use App\FileManager\FileManager;
 use App\FileManager\File\File;
 use App\FileManager\Directory\Directory;
+use Illuminate\Http\Response;
 
 class HomeController extends Controller {
 
@@ -31,15 +32,30 @@ class HomeController extends Controller {
 	}
 
 	/**
-	 * Show the application dashboard to the user.
+	 * Main entrance.
 	 *
 	 * @return Response
 	 */
 	public function index($path = '/')
 	{
+		if (! $this->file->isFileExsit($path))
+		{
+			abort(404);
+		}
+
+		if ($this->file->getMimetype($path) !== "directory")
+		{
+			$fileName = $this->file->getPathInfo($path)['basename'];
+			$fileContent = $this->file->getFile($path);
+			$fileMime = $this->file->getMimetype($path);
+
+			return response ($fileContent, 200)
+				->header("Content-Type", "application/octet-stream")
+				->header("Content-Disposition", 'attachment; filename=' . $fileName);
+		}
+
 		$objects = $this->fileManager->getAllWithMeta($path);
 
 		return view('home', compact('path', 'objects'));
 	}
-
 }
