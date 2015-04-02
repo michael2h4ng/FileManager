@@ -43,8 +43,8 @@ return [
 
 	'disks' => [
 	
-		'local' => [
-			'driver' => 'local',
+		env('DISK_NAME', 'local') => [
+			'driver' => env('DISK_DRIVER', 'local'),
 			'root'   => env('DISK_ROOT', storage_path().'/app'),
 		],
 
