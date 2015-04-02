@@ -25,6 +25,11 @@ class Directory extends AbstractObject {
         return Storage::Directories($path);
     }
 
+    public function getMimeType($dirPath)
+    {
+        return Storage::MimeType($dirPath);
+    }
+
     public function getLastModified($dirPath)
     {
         return Storage::lastModified($dirPath);
@@ -34,6 +39,7 @@ class Directory extends AbstractObject {
     {
         return new Directory(['path' => $dirPath,
                               'pathinfo' => $this->getPathInfo($dirPath),
+                              'mime'    => $this->getMimeType($dirPath),
                               'type' => 'directory',
                               'lastModified' => $this->getLastModified($dirPath)
                     ]);

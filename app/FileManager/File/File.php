@@ -56,8 +56,7 @@ class File extends AbstractObject {
         return new File(['path' => $filePath,
                          'pathinfo' => $this->getPathInfo($filePath),
                          'type' => 'file',
-                         'ext'  => 'ext',
-                         'mine' => $this->getMimetype($filePath),
+                         'mime' => $this->getMimetype($filePath),
                          'fileSize' => $this->getFileSize($filePath),
                          'lastModified' => $this->getLastModified($filePath)
                     ]);
