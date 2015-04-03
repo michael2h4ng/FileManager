@@ -70,7 +70,7 @@
                 .attr("data-basename", response.pathinfo.basename)
                 .data("basename", response.pathinfo.basename)
                 .find(".name").empty() # Remove form
-                .append("<a href=\"home" + response.path + "\">#{response.pathinfo.basename}</a>") # Populate meta data
+                .append("<a href=\"/home/" + response.path + "\">#{response.pathinfo.basename}</a>") # Populate meta data
                 .append("<div class=\"meta-info text-muted\">Just now</div>")
             .fail (response) ->
                 # Show error message
@@ -79,6 +79,19 @@
                 .find("input-folder").focus().select()
             .done (response) ->
                 $("#new_folder").prop("disabled", false)
+
+        breadcrumb()
+
+    breadcrumb = ->
+        fullPath = $("#file_system").data("dirpath")
+
+        if fullPath is '/'
+            return false
+
+        currentLink = "/home"
+        $.each fullPath.split('/'), (index, node) ->
+            currentLink += "/#{node}"
+            $(".breadcrumb").append("<li class=\"breadcrumb-item\"><a href=\"" + currentLink + "\">#{node}</a></li>")
 
     return init()
 
