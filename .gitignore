@@ -1,5 +1,6 @@
 /vendor
 /node_modules
+/bower_components
 /.idea
 .env
 .DS_Store

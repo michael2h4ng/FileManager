@@ -1,0 +1,19 @@
+{
+  "name": "FileManager",
+  "version": "0.0.0",
+  "homepage": "https://github.com/lzhang43/FileManager",
+  "authors": [
+    "Michael Zhang <lzhang43@syr.edu>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery-file-upload": "~9.9.3"
+  }
+}

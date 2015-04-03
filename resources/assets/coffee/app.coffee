@@ -86,6 +86,7 @@
                 $("#new_folder").prop("disabled", false)
 
         breadcrumb()
+        uploader()
 
     breadcrumb = ->
         fullPath = $("#file_system").data("dirpath")
@@ -97,6 +98,17 @@
         $.each fullPath.split('/'), (index, node) ->
             currentLink += "/#{node}"
             $(".breadcrumb").append("<li class=\"breadcrumb-item\"><a href=\"" + currentLink + "\">#{node}</a></li>")
+
+    uploader = ->
+        $("#fileupload").fileupload ->
+            type: "PUT",
+            dataType: 'json'
+            progressall: (e, data) ->
+                progress = parseInt(data.loaded / data.total * 100, 10)
+                $('#progress .progress-bar').css('width', progress + '%')
+            done: (e, data) ->
+                $.each data.result.files, (index, file) ->
+                $('<p/>').text(file.name).appendTo($("#file_system"))
 
     return init()
 

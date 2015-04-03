@@ -5,6 +5,7 @@ use App\FileManager\File\File;
 use App\FileManager\Directory\Directory;
 use Illuminate\Http\Response;
 use App\Http\Requests\CreateDirectoryRequest;
+use App\Http\Requests\UploadFileRequest;
 
 class HomeController extends Controller {
 
@@ -57,6 +58,12 @@ class HomeController extends Controller {
         }
 
         return response()->json($this->directory->getObjectMeta($dirPath));
+    }
+
+    public function upload(UploadFileRequest $request) // Inject validator
+    {
+    	$data = $request->only('path', 'file'); // Retrive inputs
+    	dd($data);
     }
 
 	/**
