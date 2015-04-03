@@ -2,6 +2,7 @@
 
 use \Storage;
 use App\FileManager\AbstractObject;
+use App\Services\MetaInfoService;
 
 use Illuminate\Database\Eloquent\Collection;
 
@@ -18,7 +19,7 @@ class File extends AbstractObject {
 
     public function getPathInfo($filePath)
     {
-        return pathinfo($filePath);
+        return MetaInfoService::mb_pathinfo($filePath);
     }
 
     public function isFileExsit($filePath)

@@ -2,6 +2,7 @@
 
 use \Storage;
 use App\FileManager\AbstractObject;
+use App\Services\MetaInfoService;
 use Illuminate\Database\Eloquent\Collection;
 
 class Directory extends AbstractObject {
@@ -17,7 +18,7 @@ class Directory extends AbstractObject {
 
     public function getPathInfo($dirPath)
     {
-        return pathinfo($dirPath);
+        return MetaInfoService::mb_pathinfo($dirPath);
     }
 
     public function getAll($path)
