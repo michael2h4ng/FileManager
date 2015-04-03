@@ -53,6 +53,11 @@
         $("#file_system").on "submit", ".object .name form", (e) ->
             e.preventDefault()
 
+            if not $("#input-folder").val()
+                $("#file_system .object").first().parent().remove()
+                $("#new_folder").prop("disabled", false)
+                return false
+
             $("#file_system .object").first().addClass("uploading") # Add uploading animation
 
             $.ajax
