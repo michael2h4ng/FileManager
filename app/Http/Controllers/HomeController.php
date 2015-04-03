@@ -62,7 +62,7 @@ class HomeController extends Controller {
 
     public function upload(UploadFileRequest $request) // Inject validator
     {
-    	$data = $request->only('path', 'file'); // Retrive inputs
+    	$data = $request->all(); // Retrive inputs
     	dd($data);
     }
 

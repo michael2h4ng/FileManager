@@ -20,10 +20,17 @@
                 <span class="glyphicon glyphicon-folder-close" aria-hidden="true"></span> New Folder
             </button>
 
-            <form>
-                <input id="fileupload" type="file" name="files[]" data-url="/manager/put/file" multiple>
-                <input type="hidden" name="_method" value="PUT">
-            </form>
+            <div id="new_file" class="btn btn-default">
+                <form>
+                    <label class="" for="fileupload">
+                        <span class="glyphicon glyphicon-upload upload-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Upload</span>
+                    </label>
+                    <input id="fileupload" type="file" name="files[]" data-url="/manager/put/file" data-toggle="tooltip" data-placement="right" title="Max File Size: {{{ini_get('post_max_size')}}}" multiple>
+                    <input type="hidden" name="_method" value="PUT">
+                    <input type="hidden" name="dirPath" value="{{{ $path }}}">
+                </form>
+            </div>
 
             <div id="progress" class="progress">
                 <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%;">

@@ -85,6 +85,7 @@
             .done (response) ->
                 $("#new_folder").prop("disabled", false)
 
+        $('[data-toggle="tooltip"]').tooltip()
         breadcrumb()
         uploader()
 
