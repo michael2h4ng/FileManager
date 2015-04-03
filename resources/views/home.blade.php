@@ -15,15 +15,15 @@
     <div class="row">
         <div class="col-md-12">
             <button id="new_folder" type="button" class="btn btn-default" aria-label="New Folder">
-                <span class="glyphicon glyphicon-folder-close" aria-hidden="true"></span>
+                <span class="glyphicon glyphicon-folder-close" aria-hidden="true"></span> New Folder
             </button>
         </div>
     </div>
 
-	<div id="file_system" class="row">
+	<div id="file_system" class="row" data-dirpath="{{{ $path }}}">
         @foreach ($objects as $object)
                 <div class="col-xs-4 col-sm-3 col-md-2">
-                    <div class="object" data-filetype="{{{ $object->type }}}" data-mime="{{{ $object->mime }}}" data-basename="{{{ $object->pathinfo['basename'] }}}">
+                    <div class="object" data-filetype="{{{ $object->type }}}" data-fullpath="{{{ $object->path }}}" data-ext="" data-basename="{{{ $object->pathinfo['basename'] }}}">
                         <div class="icon-container">
                             <div class="icon-base {{{ $object->type }}}"></div>
                             <div class="icon-main"></div>

@@ -12,6 +12,7 @@
                             <form>
                                 <label for="input-folder" class="sr-only">New folder</label>
                                 <input type="text" placeholder="Folder Name" id="input-folder" class="text-center">
+                                <input type="hidden" name="_method" value="PUT">
                             </form>
                         </div>
                          <div class="meta-info text-muted"></div>
@@ -21,10 +22,15 @@
              """
 
     init = ->
+        $.ajaxSetup
+            headers:
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr("content")
+
         $("#new_folder").on "click", ->
-            $(this).attr("disabled", true)
+            $(this).prop("disabled", true)
             $("#file_system").prepend(folder)
             names = []
+
             $(".object").each ->
                 basename = $(this).data("basename")
 
@@ -32,10 +38,48 @@
                     basename = basename.replace("Untitled Folder", "").trim()
                     if not basename
                         basename = 1
-                    names.push(parseInt(basename,10));
+                    names.push(parseInt(basename,10))
 
-            next = Math.max.apply(Math, names) + 1 # Find the max number of all "Untitled Folder"s
-            $("#input-folder").focus().attr("value", "Untitled Folder #{next}") # Increment and populate the new Untitled Folder
+            if names.length > 0
+                newFolder = "Untitled Folder #{Math.max.apply(Math, names) + 1}"
+            else
+                newFolder = "Untitled Folder"
+
+            $("#input-folder").val("#{newFolder}").focus().select() # Increment and populate the new Untitled Folder
+
+        $("#file_system").on "focusout", ".object .name #input-folder", ->
+            $(this).parent().submit()
+
+        $("#file_system").on "submit", ".object .name form", (e) ->
+            e.preventDefault()
+
+            $("#file_system .object").first().addClass("uploading") # Add uploading animation
+
+            $.ajax
+                url: "/manager/put/directory",
+                data:
+                    path: $("#file_system").data("dirpath")
+                    dirName: $("#input-folder").val()
+                type: "PUT"
+                dataType: "json"
+            .success (response) ->
+                # Remove form and populate meta data
+                $("#file_system .object").first().removeClass("uploading").removeClass("new-folder") # Remove uploading animation
+                .attr("data-filetype", response.mime)
+                .attr("data-fullpath", response.path)
+                .attr("data-basename", response.pathinfo.basename)
+                .data("basename", response.pathinfo.basename)
+                .find(".name").empty() # Remove form
+                .append("<a href=\"home" + response.path + "\">#{response.pathinfo.basename}</a>") # Populate meta data
+                .append("<div class=\"meta-info text-muted\">Just now</div>")
+            .fail (response) ->
+                # Show error message
+                alert("Failed to create the folder")
+                $("#file_system .object").first().removeClass("uploading")
+                .find("input-folder").focus().select()
+            .done (response) ->
+                $("#new_folder").prop("disabled", false)
 
     return init()
+
 ) jQuery

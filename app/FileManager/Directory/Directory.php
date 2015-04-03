@@ -45,7 +45,7 @@ class Directory extends AbstractObject {
                     ]);
     }
 
-    public function getAllWithMeta($path, $sortBy = "name")
+    public function getAllWithMeta($path, $sortBy = "path")
     {
         $names = $this->getAll($path);
         $directories = new Collection();
@@ -56,6 +56,11 @@ class Directory extends AbstractObject {
         }
 
         return $directories->sortBy($sortBy);
+    }
+
+    public function createDir($dirPath)
+    {
+        return Storage::makeDirectory($dirPath);
     }
 
     /**

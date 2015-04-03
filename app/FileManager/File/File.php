@@ -62,7 +62,7 @@ class File extends AbstractObject {
                     ]);
     }
 
-    public function getAllWithMeta($path, $sortBy = "name")
+    public function getAllWithMeta($path, $sortBy = "path")
     {
         $names = $this->getAll($path);
         $files = new Collection();

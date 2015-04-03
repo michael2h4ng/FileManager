@@ -11,6 +11,11 @@ body, label, .checkbox label {
   margin-bottom: 30px;
   padding-top: 10px;
 
+  &.uploading {
+    opacity: 0.6;
+    cursor: progress;
+  }
+
   &:hover, &.selected {
     background-color: #e8f6fe;
     border-radius: 10px;
@@ -38,6 +43,7 @@ body, label, .checkbox label {
 
     #input-folder {
       width: 150px;
+      margin-bottom: 10px;
     }
   }
 

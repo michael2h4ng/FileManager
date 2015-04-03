@@ -4,6 +4,7 @@ use App\FileManager\FileManager;
 use App\FileManager\File\File;
 use App\FileManager\Directory\Directory;
 use Illuminate\Http\Response;
+use App\Http\Requests\CreateDirectoryRequest;
 
 class HomeController extends Controller {
 
@@ -31,6 +32,33 @@ class HomeController extends Controller {
         $this->directory = $directory;
 	}
 
+    public function create(CreateDirectoryRequest $request) // Inject validator
+    {
+        $data = $request->only('path', 'dirName'); // Retrive inputs
+
+        if ($data['path'] == '/')
+        {
+            $dirPath = "/" . $data['dirName'];
+        }
+        else
+        {
+            $dirPath = $data['path'] . "/" . $data['dirName'];
+        }
+
+        // Check if the directory already exist
+        while ($this->file->isFileExsit($dirPath))
+        {
+            $dirPath .= " (2)";
+        }
+
+        if (! $this->directory->createDir($dirPath))
+        {
+            // Throw an unknown error
+        }
+
+        return response()->json($this->directory->getObjectMeta($dirPath));
+    }
+
 	/**
 	 * Main entrance.
 	 *
@@ -47,7 +75,6 @@ class HomeController extends Controller {
 		{
 			$fileName = $this->file->getPathInfo($path)['basename'];
 			$fileContent = $this->file->getFile($path);
-			$fileMime = $this->file->getMimetype($path);
 
 			return response ($fileContent, 200)
 				->header("Content-Type", "application/octet-stream")
