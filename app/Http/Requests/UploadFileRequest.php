@@ -1,6 +1,6 @@
 <?php namespace App\Http\Requests;
 
-use App\Http\Requests\Request;
+use \Auth;
 
 class UploadFileRequest extends Request {
 
@@ -11,7 +11,12 @@ class UploadFileRequest extends Request {
 	 */
 	public function authorize()
 	{
-		return true;
+        if (Auth::check())
+        {
+            return true;
+        }
+
+        return false;
 	}
 
 	/**
@@ -22,6 +27,8 @@ class UploadFileRequest extends Request {
 	public function rules()
 	{
 		return [
+            'dirPath' => 'required',
+            'files'   => 'required'
 		];
 	}
 

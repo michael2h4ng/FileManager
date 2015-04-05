@@ -58,7 +58,8 @@
             $("#input-folder").val("#{newFolder}").focus().select() # Increment and populate the new Untitled Folder
 
         $("#file_system").on "focusout", ".object .name #input-folder", ->
-            $(this).parent().submit()
+            $(this).parent().trigger("submit")
+            return false
 
         $("#file_system").on "submit", "#create-form", (e) ->
             e.preventDefault()
@@ -186,12 +187,13 @@
         $("#file_system").on "click", ".object .rename", (e) ->
             e.preventDefault()
             renameInput($(this).parents(".object"))
-
-        $("#file_system").on "focusout", ".object #input-file", ->
-            $(this).parent().submit()
             return false
 
-        $("#file_system").on "submit", ".object #rename-form", (e) ->
+        $("#file_system").on "focusout", ".object .name #input-file", ->
+            $(this).parent().trigger("submit")
+            return false
+
+        $("#file_system").on "submit", "#rename-form", (e) ->
             e.preventDefault()
 
             currentObject = $(this).parents(".object")
@@ -224,6 +226,7 @@
                 alert("Failed to rename the object")
                 currentObject.removeClass("renaming").find(".name a").show()
                 currentObject.find("#rename-form").remove()
+            return false
 
     renameInput = (object) ->
         oldName = object.data("basename");

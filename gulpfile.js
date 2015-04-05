@@ -14,9 +14,4 @@ var elixir = require('laravel-elixir');
 elixir(function(mix) {
     mix.less('app.less');
     mix.coffee('app.coffee');
-
-    mix.scripts(["vendor/jquery.ui.widget.js", 
-    			 "jquery.iframe-transport.js", 
-    			 "jquery.fileupload.js"],
-    			"public/js/file-upload.js", "bower_components/jquery-file-upload/js/");
 });

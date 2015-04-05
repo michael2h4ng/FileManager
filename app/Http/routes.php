@@ -11,6 +11,11 @@
 |
 */
 
+Route::get('/', function()
+{
+    return redirect('home/');
+});
+
 Route::get('home/{path?}', 'HomeController@index')->where('path', '(.*)'); // List
 Route::put('manager/put/directory', 'HomeController@create'); // Create a new directory
 Route::put('manager/put/file', 'HomeController@upload'); // Upload a file

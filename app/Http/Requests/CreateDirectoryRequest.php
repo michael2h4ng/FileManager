@@ -1,6 +1,6 @@
 <?php namespace App\Http\Requests;
 
-use App\Http\Requests\Request;
+use \Auth;
 
 class CreateDirectoryRequest extends Request {
 
@@ -11,7 +11,12 @@ class CreateDirectoryRequest extends Request {
 	 */
 	public function authorize()
 	{
-		return true;
+        if (Auth::check())
+        {
+            return true;
+        }
+
+        return false;
 	}
 
 	/**
