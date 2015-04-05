@@ -3,6 +3,7 @@
 use App\FileManager\FileManager;
 use App\FileManager\File\File;
 use App\FileManager\Directory\Directory;
+use App\Http\Requests\MoveObjectRequest;
 use App\Services\MetaInfoService;
 use Illuminate\Http\Response;
 use App\Http\Requests\CreateDirectoryRequest;
@@ -102,7 +103,7 @@ class HomeController extends Controller {
             {
                 $filePath .=  $fileExtension; // Full file path
             }
-            
+
             $fileContent = FileService::get($file);
 
             // Upload the file
@@ -115,6 +116,21 @@ class HomeController extends Controller {
         }
 
         return response()->json(array("errors" => $errors, "success" => $success));
+    }
+
+    public function move(MoveObjectRequest $request)
+    {
+        // Retrieve inputs
+        $data = $request->only('path', 'oldName', 'newName', 'fileType');
+
+        $this->file->moveObject($data['path'] . '/' . $data['oldName'], $data['path'] . '/' . $data['newName']);
+
+        if($data['fileType'] == 'directory')
+        {
+            return response()->json($this->directory->getObjectMeta($data['path'] . '/' . $data['newName']));
+        }
+
+        return response()->json($this->file->getObjectMeta($data['path'] . '/' . $data['newName']));
     }
 
 	/**

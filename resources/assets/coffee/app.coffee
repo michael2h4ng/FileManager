@@ -30,11 +30,11 @@
         $("#file_system").on "focusout", ".object .name #input-folder", ->
             $(this).parent().submit()
 
-        $("#file_system").on "submit", ".object .name form", (e) ->
+        $("#file_system").on "submit", "#create-form", (e) ->
             e.preventDefault()
 
             if not $("#input-folder").val()
-                $("#file_system .object").first().parent().remove()
+                $(this).parents("object-container").remove()
                 $("#new_folder").prop("disabled", false)
                 return false
 
@@ -62,6 +62,8 @@
         $('[data-toggle="tooltip"]').tooltip()
         breadcrumb()
         uploader()
+        initRename()
+        initFileSelection()
 
     breadcrumb = ->
         fullPath = $("#file_system").data("dirpath")
@@ -106,7 +108,7 @@
 
     insertObject = (objectType, newObject) ->
         nameInput = """
-            <form>
+            <form id="create-form">
                 <label for="input-folder" class="sr-only">New folder</label>
                 <input type="text" placeholder="Folder Name" id="input-folder" class="text-center">
                 <input type="hidden" name="_method" value="PUT">
@@ -119,7 +121,7 @@
             name = null
 
         objectModel = """
-             <div class="col-xs-4 col-sm-3 col-md-2">
+             <div class="col-xs-4 col-sm-3 col-md-2 object-container">
                  <div data-basename="" data-mime="" data-filetype="" class="object object-new">
                      <div class="icon-container">
                          <div class="icon-base #{objectType}"></div>
@@ -141,13 +143,77 @@
             return $(objectModel).appendTo( "#file_system" )
 
     populateMeta = (object, objectType, objectMeta) ->
-        object.removeClass("uploading").removeClass("object-new") # Remove uploading animation
+        if not objectMeta.pathinfo.dirname
+            link = "/home#{objectMeta.path}"
+        else
+            link = "/home/#{objectMeta.path}"
+
+        object.removeClass("uploading").removeClass("renaming").removeClass("object-new") # Remove uploading animation
         .data("filetype", objectMeta.mime)
         .data("basename", objectMeta.pathinfo.basename)
         .data("fullpath", objectMeta.path)
         .find(".name").empty() # Replace name class with new data
-        .append("<a href=\"/home" + objectMeta.path + "\">#{objectMeta.pathinfo.basename}</a>")
+        .append("<a href=\"" + link + "\">#{objectMeta.pathinfo.basename}</a>")
+        .parent().children(".meta-info").empty() # Replace last modified time with "Just now"
         .append("<div class=\"meta-info text-muted\">Just now</div>")
+
+    initRename = () ->
+        $(".object").on "click", ".rename", ->
+            renameInput($(this).parents(".object"))
+
+        $(".object").on "focusout", "#input-file", ->
+            $(this).parent().submit()
+            return false
+
+        $(".object").on "submit", "#rename-form", (e) ->
+            e.preventDefault()
+
+            currentObject = $(this).parents(".object")
+            oldName = currentObject.data("basename")
+            newName = $(this).children("#input-file").val()
+            fileType = currentObject.data("filetype")
+
+            if not newName or (oldName is newName) # No name change
+                $(this).parent().find("a").show()
+                $(this).remove()
+                return false
+
+            currentObject.addClass("renaming") # Add renaming effects
+
+            $.ajax
+                url: "/manager/move",
+                data:
+                    path: $("#file_system").data("dirpath")
+                    oldName: oldName
+                    newName: newName
+                    fileType: fileType
+                type: "POST"
+                dataType: "json"
+            .success (response) ->
+                # Remove form and populate meta data
+                populateMeta(currentObject, fileType, response)
+                currentObject.find(".name").append(""" <a href="#" class="hide rename"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></a>""")
+            .fail ->
+                # Show error message
+                alert("Failed to rename the object")
+                currentObject.removeClass("renaming").find(".name a").show()
+                currentObject.find("#rename-form").remove()
+
+    renameInput = (object) ->
+        oldName = object.data("basename");
+        nameInput = """
+            <form id="rename-form">
+                <label for="input-file" class="sr-only">File Name</label>
+                <input type="text" placeholder="Folder Name" id="input-file" class="text-center" value="#{oldName}">
+            </form>
+            """
+
+        object.find(".name a").hide()
+        $(nameInput).prependTo(object.find(".name")).find("#input-file").focus().select()
+
+    initFileSelection = () ->
+        $("#file_system").on "click", ".object", ->
+            $(this).toggleClass("selected")
 
     return init()
 

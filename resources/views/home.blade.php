@@ -21,7 +21,7 @@
             <div id="new_file" class="btn btn-default">
                 <form id="upload" enctype="multipart/form-data">
                     <label class="" for="fileupload">
-                        <span class="glyphicon glyphicon-upload upload-icon" aria-hidden="true"></span>
+                        <span class="glyphicon glyphicon-cloud-upload upload-icon" aria-hidden="true"></span>
                         <span class="sr-only">Upload</span>
                     </label>
                     <input id="fileupload" type="file" name="files[]" data-toggle="tooltip" data-placement="right" title="Max File Size: {{{ $maxFileSize }}}" multiple>
@@ -36,14 +36,17 @@
 <div class="container-fluid">
 	<div id="file_system" class="row" data-dirpath="{{{ $path }}}" data-maxfilesize="{{{ $maxFileSizeBytes }}}">
         @foreach ($objects as $object)
-                <div class="col-xs-4 col-sm-3 col-md-2">
+                <div class="col-xs-4 col-sm-3 col-md-2 object-container">
                     <div class="object" data-filetype="{{{ $object->type }}}" data-fullpath="{{{ $object->path }}}" data-ext="" data-basename="{{{ $object->pathinfo['basename'] }}}">
                         <div class="icon-container">
                             <div class="icon-base {{{ $object->type }}}"></div>
                             <div class="icon-main"></div>
                         </div>
                         <div class="name-container">
-                            <div role="button" class="name text-primary" title="{{{ $object->pathinfo['basename'] }}}"><a href="{{{ $object->url }}}">{{{ $object->basename }}}</a></div>
+                            <div role="button" class="name text-primary" title="{{{ $object->pathinfo['basename'] }}}">
+                                <a href="{{{ $object->url }}}">{{{ $object->basename }}}</a>
+                                <a href="#" class="hide rename"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></a>
+                            </div>
                             <div class="meta-info text-muted">{{{ $object->lastModified }}}</div>
                         </div>
                     </div>

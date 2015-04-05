@@ -63,6 +63,11 @@ class File extends AbstractObject {
                     ]);
     }
 
+    public function moveObject($oldPath, $newPath)
+    {
+        return Storage::move($oldPath, $newPath);
+    }
+
     public function getAllWithMeta($path, $sortBy = "path")
     {
         $names = $this->getAll($path);

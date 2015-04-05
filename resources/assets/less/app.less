@@ -37,14 +37,26 @@ body, label, .checkbox label {
   margin-bottom: 30px;
   padding-top: 10px;
 
-  &.uploading {
+  &.uploading,
+  &.renaming {
     opacity: 0.6;
     cursor: progress;
   }
 
-  &:hover, &.selected {
+  &:hover,
+  &.selected {
     background-color: #e8f6fe;
     border-radius: 10px;
+  }
+
+  &:hover {
+    a.rename {
+      display: inline !important;
+    }
+
+    #rename-form ~ a.rename {
+      display: none !important;
+    }
   }
 
   .icon-container {
@@ -67,7 +79,8 @@ body, label, .checkbox label {
     margin-top: 10px;
     text-align: center;
 
-    #input-folder {
+    #input-folder,
+    #input-file {
       width: 150px;
       margin-bottom: 10px;
     }
