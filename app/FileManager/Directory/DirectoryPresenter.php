@@ -21,4 +21,16 @@ class DirectoryPresenter extends BasePresenter {
     {
     	return action('HomeController@index', [$this->path]);
     }
+
+    public function basename()
+    {
+        $basename = $this->wrappedObject->pathinfo['basename'];
+
+        if (mb_strlen($basename) > 10)
+        {
+            return mb_substr($basename, 0, 20) . "...";
+        }
+
+        return $basename;
+    }
 }

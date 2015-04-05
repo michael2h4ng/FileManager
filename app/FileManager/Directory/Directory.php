@@ -61,7 +61,7 @@ class Directory extends AbstractObject {
 
     public function createDir($dirPath)
     {
-        return Storage::makeDirectory($dirPath);
+        return Storage::makeDirectory(trim($dirPath));
     }
 
     /**

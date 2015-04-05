@@ -76,6 +76,11 @@ class File extends AbstractObject {
         return $files->sortBy($sortBy);
     }
 
+    public function uploadFile($filePath, $fileContent)
+    {
+        return Storage::disk(env('DISK_NAME', 'local'))->put(trim($filePath), $fileContent);
+    }
+
     /**
      * @return string The path to the presenter class
      */

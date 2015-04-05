@@ -1,34 +1,14 @@
 (($) ->
 
-    folder = """
-             <div class="col-xs-4 col-sm-3 col-md-2">
-                 <div data-basename="" data-mime="" data-filetype="" class="object new-folder">
-                     <div class="icon-container">
-                         <div class="icon-base directory"></div>
-                         <div class="icon-main"></div>
-                     </div>
-                     <div class="name-container">
-                         <div title="" class="name text-primary" role="button">
-                            <form>
-                                <label for="input-folder" class="sr-only">New folder</label>
-                                <input type="text" placeholder="Folder Name" id="input-folder" class="text-center">
-                                <input type="hidden" name="_method" value="PUT">
-                            </form>
-                        </div>
-                         <div class="meta-info text-muted"></div>
-                     </div>
-                 </div>
-             </div>
-             """
-
     init = ->
+        # Set up CSRF Token for every AJAX request
         $.ajaxSetup
             headers:
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr("content")
 
         $("#new_folder").on "click", ->
             $(this).prop("disabled", true)
-            $("#file_system").prepend(folder)
+            insertObject("directory", true)
             names = []
 
             $(".object").each ->
@@ -58,7 +38,8 @@
                 $("#new_folder").prop("disabled", false)
                 return false
 
-            $("#file_system .object").first().addClass("uploading") # Add uploading animation
+            currentObject = $(this).parents(".object")
+            currentObject.first().addClass("uploading") # Add uploading animation
 
             $.ajax
                 url: "/manager/put/directory",
@@ -69,14 +50,7 @@
                 dataType: "json"
             .success (response) ->
                 # Remove form and populate meta data
-                $("#file_system .object").first().removeClass("uploading").removeClass("new-folder") # Remove uploading animation
-                .attr("data-filetype", response.mime)
-                .attr("data-fullpath", response.path)
-                .attr("data-basename", response.pathinfo.basename)
-                .data("basename", response.pathinfo.basename)
-                .find(".name").empty() # Remove form
-                .append("<a href=\"/home/" + response.path + "\">#{response.pathinfo.basename}</a>") # Populate meta data
-                .append("<div class=\"meta-info text-muted\">Just now</div>")
+                populateMeta(currentObject, "directory", response)
             .fail (response) ->
                 # Show error message
                 alert("Failed to create the folder")
@@ -101,15 +75,79 @@
             $(".breadcrumb").append("<li class=\"breadcrumb-item\"><a href=\"" + currentLink + "\">#{node}</a></li>")
 
     uploader = ->
-        $("#fileupload").fileupload ->
-            type: "PUT",
-            dataType: 'json'
-            progressall: (e, data) ->
-                progress = parseInt(data.loaded / data.total * 100, 10)
-                $('#progress .progress-bar').css('width', progress + '%')
-            done: (e, data) ->
-                $.each data.result.files, (index, file) ->
-                $('<p/>').text(file.name).appendTo($("#file_system"))
+        $("#fileupload").on "change", ->
+            files = this.files
+            maxFileSize = $("#file_system").data("maxfilesize") - 512 # Consider POST overhead
+
+            $.each files, (index, file) ->
+                if file.size > maxFileSize
+                    alert "File #{file.name} is too large"
+                    return false
+
+            formData = new FormData($("#upload")[0])
+
+            $.ajax
+                url: "/manager/put/file",
+                type: "POST"
+                dataType: "json"
+                data: formData
+                cache: false
+                contentType: false # Prevent jQuery from processing the data
+                processData: false
+            .success (responses) ->
+                $(responses.errors).each (index, error) ->
+                    console.log error
+                $(responses.success).each (index, file) ->
+                    console.log file
+                    newObject = $(insertObject("file", false)).children()
+                    populateMeta(newObject, "file", file)
+            .fail ->
+                alert("Upload failed")
+
+    insertObject = (objectType, newObject) ->
+        nameInput = """
+            <form>
+                <label for="input-folder" class="sr-only">New folder</label>
+                <input type="text" placeholder="Folder Name" id="input-folder" class="text-center">
+                <input type="hidden" name="_method" value="PUT">
+            </form>
+            """
+
+        if newObject
+            name = nameInput
+        else
+            name = null
+
+        objectModel = """
+             <div class="col-xs-4 col-sm-3 col-md-2">
+                 <div data-basename="" data-mime="" data-filetype="" class="object object-new">
+                     <div class="icon-container">
+                         <div class="icon-base #{objectType}"></div>
+                         <div class="icon-main"></div>
+                     </div>
+                     <div class="name-container">
+                         <div title="" class="name text-primary" role="button">
+                            #{name}
+                         </div>
+                         <div class="meta-info text-muted"></div>
+                     </div>
+                 </div>
+             </div>
+             """
+
+        if objectType is "directory"
+            return $(objectModel).prependTo( "#file_system" )
+        else if objectType is "file"
+            return $(objectModel).appendTo( "#file_system" )
+
+    populateMeta = (object, objectType, objectMeta) ->
+        object.removeClass("uploading").removeClass("object-new") # Remove uploading animation
+        .data("filetype", objectMeta.mime)
+        .data("basename", objectMeta.pathinfo.basename)
+        .data("fullpath", objectMeta.path)
+        .find(".name").empty() # Replace name class with new data
+        .append("<a href=\"/home" + objectMeta.path + "\">#{objectMeta.pathinfo.basename}</a>")
+        .append("<div class=\"meta-info text-muted\">Just now</div>")
 
     return init()
 

@@ -3,9 +3,12 @@
 use App\FileManager\FileManager;
 use App\FileManager\File\File;
 use App\FileManager\Directory\Directory;
+use App\Services\MetaInfoService;
 use Illuminate\Http\Response;
 use App\Http\Requests\CreateDirectoryRequest;
 use App\Http\Requests\UploadFileRequest;
+use App\Services\MataInfoService;
+use \File as FileService;
 
 class HomeController extends Controller {
 
@@ -35,7 +38,7 @@ class HomeController extends Controller {
 
     public function create(CreateDirectoryRequest $request) // Inject validator
     {
-        $data = $request->only('path', 'dirName'); // Retrive inputs
+        $data = $request->only('path', 'dirName'); // Retrieve inputs
 
         if ($data['path'] == '/')
         {
@@ -50,6 +53,7 @@ class HomeController extends Controller {
         while ($this->file->isFileExsit($dirPath))
         {
             $dirPath .= " (2)";
+            trim($dirPath);
         }
 
         if (! $this->directory->createDir($dirPath))
@@ -62,8 +66,55 @@ class HomeController extends Controller {
 
     public function upload(UploadFileRequest $request) // Inject validator
     {
-    	$data = $request->all(); // Retrive inputs
-    	dd($data);
+    	$data = $request->only('dirPath'); // Retrieve meta data
+        $files = $request->file('files'); // Retrieve the files
+
+        // Check if the directory exist
+        if ($this->file->isFileExsit($data['dirPath']))
+        {
+            // Throw exception
+        }
+
+        $errors = []; // Initialize message bag
+        $success = [];
+        foreach ($files as $key => $file)
+        {
+            // Construct physical path to the file
+            $fileName = MetaInfoService::mb_pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+            $fileExtension = "." . $file->getClientOriginalExtension();
+
+            if ($data['dirPath'] == '/')
+            {
+                $filePath = "/" . $fileName;
+            }
+            else
+            {
+                $filePath = $data['dirPath'] . "/" . $fileName;
+            }
+
+            // Determine if the file already exist
+            while ($this->file->isFileExsit($filePath . $fileExtension))
+            {
+                $filePath .= " (2)";
+            }
+
+            if ($fileExtension !== ".")
+            {
+                $filePath .=  $fileExtension; // Full file path
+            }
+            
+            $fileContent = FileService::get($file);
+
+            // Upload the file
+            if (!$this->file->uploadFile(trim($filePath), $fileContent))
+            {
+                $errors[] = array( "fileName" => $fileName );
+            }
+
+            $success[] = $this->file->getObjectMeta($filePath);
+        }
+
+        return response()->json(array("errors" => $errors, "success" => $success));
     }
 
 	/**
@@ -90,6 +141,9 @@ class HomeController extends Controller {
 
 		$objects = $this->fileManager->getAllWithMeta($path);
 
-		return view('home', compact('path', 'objects'));
+        $maxFileSize = MetaInfoService::max_file_size(False);
+        $maxFileSizeBytes =  MetaInfoService::max_file_size(True);
+
+		return view('home', compact('path', 'objects', 'maxFileSize', 'maxFileSizeBytes'));
 	}
 }

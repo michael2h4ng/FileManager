@@ -10,6 +10,18 @@ class FilePresenter extends BasePresenter {
         $this->wrappedObject = $resource;
     }
 
+    public function basename()
+    {
+        $basename = $this->wrappedObject->pathinfo['basename'];
+
+        if (strlen($basename) > 20)
+        {
+            return substr($basename, 0, 20) . "...";
+        }
+
+        return $basename;
+    }
+
     public function lastModified()
     {
         $lastModified = $this->wrappedObject->lastModified;

@@ -47,4 +47,34 @@ class MetaInfoService {
         }
 	}
 
+    /**
+     * Return max file size configuration
+     *
+     * @param  bool  $bytes
+     * @return string | int
+     */
+    static public function max_file_size($bytes = True)
+    {
+        if (! $bytes)
+        {
+            return ini_get('post_max_size');
+        }
+
+        $val = trim(ini_get('post_max_size'));
+        $last = strtolower($val[strlen($val)-1]);
+
+        switch($last) {
+            case 'g':
+                $val *= 1024;
+            case 'm':
+                $val *= 1024;
+            case 'k':
+                $val *= 1024;
+            default:
+                $val;
+        }
+
+        return $val;
+    }
+
 }

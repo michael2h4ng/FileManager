@@ -22,7 +22,8 @@ class CreateDirectoryRequest extends Request {
 	public function rules()
 	{
 		return [
-            'path' => 'required' # Validate file name
+            'path' => 'required', # Validate file name
+            'dirName' => 'required'
 		];
 	}
 
