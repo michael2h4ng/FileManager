@@ -1,5 +1,22 @@
 (($) ->
 
+    # Custom single/double click listener
+    # Reference: http://stackoverflow.com/questions/6330431/jquery-bind-double-click-and-single-click-separately
+    $.fn.single_double_click = (single_click_callback, double_click_callback, timeout) ->
+        this.each ->
+            clicks = 0
+            self = this
+            $(this).click (event)->
+                clicks++;
+                if clicks is 1
+                    setTimeout ->
+                        if clicks is 1
+                            single_click_callback.call(self, event)
+                        else
+                            double_click_callback.call(self, event)
+                        clicks = 0;
+                    , (timeout || 250)
+
     init = ->
         # Set up CSRF Token for every AJAX request
         $.ajaxSetup
@@ -75,7 +92,7 @@
         currentLink = "/home"
         $.each fullPath.split('/'), (index, node) ->
             currentLink += "/#{node}"
-            $(".breadcrumb").append("<li class=\"breadcrumb-item\"><a href=\"" + currentLink + "\">#{node}</a></li>")
+            $(".breadcrumb").append("""<li class="breadcrumb-item"><a href="#{currentLink}">#{node}</a></li>""")
 
     uploader = ->
         $("#fileupload").on "change", ->
@@ -155,7 +172,7 @@
         .data("basename", objectMeta.pathinfo.basename)
         .data("fullpath", objectMeta.path)
         .find(".name").empty() # Replace name class with new data
-        .append("<a href=\"" + link + "\">#{objectMeta.pathinfo.basename}</a>")
+        .append("""<a class="link" href="#{link}">#{objectMeta.pathinfo.basename}</a>""")
         .parent().children(".meta-info").empty() # Replace last modified time with "Just now"
         .append("<div class=\"meta-info text-muted\">Just now</div>")
 
@@ -215,8 +232,11 @@
         $(nameInput).prependTo(object.find(".name")).find("#input-file").focus().select()
 
     initFileSelection = ->
-        $("#file_system").on "click", ".object", ->
-            $(this).toggleClass("selected")
+        $("#file_system .object").single_double_click(
+            (() ->
+                $(this).toggleClass("selected")),
+            (() ->
+                window.location = ($(this).find(".link").attr("href"))
 
     initDeletion = () ->
         $("#delete_object").on "click", ->

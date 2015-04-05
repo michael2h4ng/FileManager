@@ -46,7 +46,7 @@
                     </div>
                     <div class="name-container">
                         <div role="button" class="name text-primary" title="{{{ $object->pathinfo['basename'] }}}">
-                            <a href="{{{ $object->url }}}">{{{ $object->basename }}}</a>
+                            <a class="link" href="{{{ $object->url }}}">{{{ $object->basename }}}</a>
                             <a href="#" class="hide rename"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></a>
                         </div>
                         <div class="meta-info text-muted">{{{ $object->lastModified }}}</div>
