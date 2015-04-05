@@ -3,100 +3,109 @@
 @btn-font-weight: 300;
 @font-family-sans-serif: "Roboto", Helvetica, Arial, sans-serif;
 
-body, label, .checkbox label {
-  font-weight: 300;
+body,
+label,
+.checkbox label {
+    font-weight: 300;
+}
+
+#actions {
+    margin-bottom: 20px;
+
+    #new_file {
+        width: 36px;
+        height: 34px;
+
+        label {
+            margin-left: -6px;
+
+            .upload-icon {
+                font-size: 18px;
+            }
+        }
+
+        #fileupload {
+            height: 40px;
+            margin: -38px -15px;
+            opacity: 0;
+            overflow: hidden;
+            padding: 0;
+            width: 40px;
+            cursor: inherit;
+        }
+    }
 }
 
 #file_system {
 
-  &.loading {
-    opacity: 0.6;
-  }
-
-}
-
-#new_file {
-  width: 36px;
-  height: 34px;
-
-  label {
-    margin-left: -6px;
-
-    .upload-icon {
-      font-size: 18px;
+    &.loading {
+        opacity: 0.6;
     }
-  }
 
-  #fileupload {
-    height: 40px;
-    margin: -38px -15px;
-    opacity: 0;
-    overflow: hidden;
-    padding: 0;
-    width: 40px;
-    cursor: inherit;
-  }
+    .object-container {
+        height: 210px;
+        overflow: hidden;
+    }
+
 }
-
-
 
 .object {
-  margin-bottom: 30px;
-  padding-top: 10px;
+    margin-bottom: 30px;
+    padding-top: 10px;
 
-  &.uploading,
-  &.renaming {
-    opacity: 0.6;
-    cursor: progress;
-  }
-
-  &:hover,
-  &.selected {
-    background-color: #e8f6fe;
-    border-radius: 10px;
-  }
-
-  &:hover {
-    a.rename {
-      display: inline !important;
+    &.uploading,
+    &.renaming {
+        opacity: 0.6;
+        cursor: progress;
     }
 
-    #rename-form ~ a.rename {
-      display: none !important;
+    &:hover,
+    &.selected {
+        background-color: #e8f6fe;
+        border-radius: 10px;
     }
-  }
 
-  .icon-container {
+    &:hover {
+        a.rename {
+            display: inline !important;
+        }
+
+        #rename-form ~ a.rename {
+            display: none !important;
+        }
+    }
+
+    .icon-container {
+        overflow: hidden;
+
+        .icon-base {
+            height: 120px;
+        }
+
+        .icon-base.directory {
+            background: url("../images/directory.png") no-repeat center center /contain;
+        }
+
+        .icon-base.file {
+            background: url("../images/file.png") no-repeat center center /contain;
+        }
+    }
+
+    .name-container {
+        margin-top: 10px;
+        text-align: center;
+
+        .rename {
+            outline: 0;
+        }
+
+        #input-folder,
+        #input-file {
+            width: 150px;
+            margin-bottom: 5px;
+        }
+    }
+
     overflow: hidden;
-
-    .icon-base {
-      height: 120px;
-    }
-
-    .icon-base.directory {
-      background: url("../images/directory.png") no-repeat center center /contain;
-    }
-
-    .icon-base.file {
-      background: url("../images/file.png") no-repeat center center /contain;
-    }
-  }
-
-  .name-container {
-    margin-top: 10px;
-    text-align: center;
-
-    .rename {
-      outline: 0;
-    }
-
-    #input-folder,
-    #input-file {
-      width: 150px;
-      margin-bottom: 10px;
-    }
-  }
-
-  overflow: hidden;
 }
 

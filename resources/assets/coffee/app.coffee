@@ -121,7 +121,6 @@
                 $(responses.success).each (index, file) ->
                     newObject = $(insertObject("file", false)).children()
                     populateMeta(newObject, "file", file)
-                    newObject.find(".name").append(""" <a href="#" class="hide rename"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></a>""")
                     initFileSelection(newObject)
             .fail ->
                 alert("Upload failed")
@@ -173,7 +172,7 @@
         .data("basename", objectMeta.pathinfo.basename)
         .data("fullpath", objectMeta.path)
         .find(".name").empty() # Replace name class with new data
-        .append("""<a class="link" href="#{link}">#{objectMeta.pathinfo.basename}</a>""")
+        .append("""<a class="link" href="#{link}">#{objectMeta.pathinfo.basename}</a> <a href="#" class="hide rename"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></a>""")
         .parent().children(".meta-info").empty() # Replace last modified time with "Just now"
         .append("<div class=\"meta-info text-muted\">Just now</div>")
 
@@ -212,8 +211,8 @@
                 dataType: "json"
             .success (response) ->
                 # Remove form and populate meta data
+                currentObject.find(".name").empty()
                 populateMeta(currentObject, fileType, response)
-                currentObject.find(".name").append(""" <a href="#" class="hide rename"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></a>""")
             .fail ->
                 # Show error message
                 alert("Failed to rename the object")

@@ -1,7 +1,7 @@
 @extends('app')
 
 @section('content')
-<div class="container-fliud">
+<div class="container-fluid">
     <div class="row">
         <div class="col-md-12">
             <ol class="breadcrumb">
@@ -13,14 +13,14 @@
     </div>
 
     <div class="row">
-        <div class="col-md-12">
+        <div id="actions" class="col-md-12">
             <div id="new_file" class="btn btn-default">
                 <form id="upload" enctype="multipart/form-data">
                     <label class="" for="fileupload">
                         <span class="glyphicon glyphicon-cloud-upload upload-icon" aria-hidden="true"></span>
                         <span class="sr-only">Upload</span>
                     </label>
-                    <input id="fileupload" type="file" name="files[]" data-toggle="tooltip" data-placement="right" title="Max File Size: {{{ $maxFileSize }}}" multiple>
+                    <input id="fileupload" type="file" name="files[]" data-toggle="tooltip" data-placement="bottom" title="Max File Size: {{{ $maxFileSize }}}" multiple>
                     <input type="hidden" name="_method" value="PUT">
                     <input type="hidden" name="dirPath" value="{{{ $path }}}">
                 </form>

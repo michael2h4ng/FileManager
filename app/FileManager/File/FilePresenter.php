@@ -14,9 +14,9 @@ class FilePresenter extends BasePresenter {
     {
         $basename = $this->wrappedObject->pathinfo['basename'];
 
-        if (strlen($basename) > 20)
+        if (strlen($basename) > 40)
         {
-            return substr($basename, 0, 20) . "...";
+            return mb_substr($basename, 0, 30) . "...";
         }
 
         return $basename;
