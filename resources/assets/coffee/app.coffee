@@ -64,6 +64,7 @@
         uploader()
         initRename()
         initFileSelection()
+        initDeletion()
 
     breadcrumb = ->
         fullPath = $("#file_system").data("dirpath")
@@ -103,6 +104,7 @@
                     console.log file
                     newObject = $(insertObject("file", false)).children()
                     populateMeta(newObject, "file", file)
+                    newObject.find(".name").append(""" <a href="#" class="hide rename"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></a>""")
             .fail ->
                 alert("Upload failed")
 
@@ -158,14 +160,15 @@
         .append("<div class=\"meta-info text-muted\">Just now</div>")
 
     initRename = () ->
-        $(".object").on "click", ".rename", ->
+        $("#file_system").on "click", ".object .rename", (e) ->
+            e.preventDefault()
             renameInput($(this).parents(".object"))
 
-        $(".object").on "focusout", "#input-file", ->
+        $("#file_system").on "focusout", ".object #input-file", ->
             $(this).parent().submit()
             return false
 
-        $(".object").on "submit", "#rename-form", (e) ->
+        $("#file_system").on "submit", ".object #rename-form", (e) ->
             e.preventDefault()
 
             currentObject = $(this).parents(".object")
@@ -211,9 +214,34 @@
         object.find(".name a").hide()
         $(nameInput).prependTo(object.find(".name")).find("#input-file").focus().select()
 
-    initFileSelection = () ->
+    initFileSelection = ->
         $("#file_system").on "click", ".object", ->
             $(this).toggleClass("selected")
+
+    initDeletion = () ->
+        $("#delete_object").on "click", ->
+            selectedFiles = $(".selected")
+
+            $(this).prop("disabled", true)
+
+            selectedFiles.each (index, file) ->
+                fileType = $(file).data("filetype")
+                $.ajax
+                    url: "/manager/delete",
+                    data:
+                        path: $(file).data("fullpath")
+                        fileType: fileType
+                    type: "DELETE"
+                    dataType: "json"
+                .success ->
+                    # Remove form and populate meta data
+                    $(file).fadeOut 800, ->
+                        $(this).parent().remove()
+                .fail ->
+                    # Show error message
+                    alert("""Failed to delete #{fileType} #{$(file).data("basename")}""")
+
+            $("#delete_object").prop("disabled", false) # Enable delete button
 
     return init()
 

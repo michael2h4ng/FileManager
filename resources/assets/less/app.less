@@ -9,11 +9,9 @@ body, label, .checkbox label {
 
 #new_file {
   width: 36px;
-  height: 36px;
-  cursor: pointer;
+  height: 34px;
 
   label {
-    margin-top: 2px;
     margin-left: -6px;
 
     .upload-icon {
@@ -23,11 +21,12 @@ body, label, .checkbox label {
 
   #fileupload {
     height: 40px;
-    margin: -35px -15px;
+    margin: -38px -15px;
     opacity: 0;
     overflow: hidden;
     padding: 0;
     width: 40px;
+    cursor: inherit;
   }
 }
 
@@ -79,6 +78,10 @@ body, label, .checkbox label {
     margin-top: 10px;
     text-align: center;
 
+    .rename {
+      outline: 0;
+    }
+
     #input-folder,
     #input-file {
       width: 150px;
@@ -88,3 +91,4 @@ body, label, .checkbox label {
 
   overflow: hidden;
 }
+

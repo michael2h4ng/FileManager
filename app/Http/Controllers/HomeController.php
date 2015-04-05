@@ -4,6 +4,7 @@ use App\FileManager\FileManager;
 use App\FileManager\File\File;
 use App\FileManager\Directory\Directory;
 use App\Http\Requests\MoveObjectRequest;
+use App\Http\Requests\DeleteObjectRequest;
 use App\Services\MetaInfoService;
 use Illuminate\Http\Response;
 use App\Http\Requests\CreateDirectoryRequest;
@@ -131,6 +132,19 @@ class HomeController extends Controller {
         }
 
         return response()->json($this->file->getObjectMeta($data['path'] . '/' . $data['newName']));
+    }
+
+    public function delete(DeleteObjectRequest $request)
+    {
+        // Retrieve inputs
+        $data = $request->only('path', 'fileType');
+
+        if ($data['fileType'] == 'directory')
+        {
+            return response()->json($this->directory->deleteObject($data['path']));
+        }
+
+        return response()->json($this->file->deleteObject($data['path']));
     }
 
 	/**

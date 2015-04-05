@@ -64,6 +64,11 @@ class Directory extends AbstractObject {
         return Storage::makeDirectory(trim($dirPath));
     }
 
+    public function deleteObject($dirPath)
+    {
+        return Storage::deleteDirectory($dirPath);
+    }
+
     /**
      * @return string The path to the presenter class
      */
