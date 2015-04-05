@@ -26,9 +26,9 @@ class DirectoryPresenter extends BasePresenter {
     {
         $basename = $this->wrappedObject->pathinfo['basename'];
 
-        if (mb_strlen($basename) > 10)
+        if (strlen($basename) > 20)
         {
-            return mb_substr($basename, 0, 20) . "...";
+            return mb_substr($basename, 0, 19) . "...";
         }
 
         return $basename;

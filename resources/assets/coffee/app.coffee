@@ -2,7 +2,7 @@
 
     # Custom single/double click listener
     # Reference: http://stackoverflow.com/questions/6330431/jquery-bind-double-click-and-single-click-separately
-    $.fn.single_double_click = (single_click_callback, double_click_callback, timeout) ->
+    $.fn.singleDoubleClick = (singleClickCallback, doubleClickCallback, timeout) ->
         this.each ->
             clicks = 0
             self = this
@@ -11,18 +11,31 @@
                 if clicks is 1
                     setTimeout ->
                         if clicks is 1
-                            single_click_callback.call(self, event)
+                            singleClickCallback.call(self, event)
                         else
-                            double_click_callback.call(self, event)
+                            doubleClickCallback.call(self, event)
                         clicks = 0;
                     , (timeout || 250)
 
     init = ->
-        # Set up CSRF Token for every AJAX request
+        initAjaxCSRF()
+        initBreadcrumb()
+        initFileSelection()
+        initNewFolder()
+        initUpload()
+        initRename()
+        initDeletion()
+        initTooltip()
+
+    initAjaxCSRF = ->
         $.ajaxSetup
             headers:
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr("content")
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr("content") # Set up CSRF Token for every AJAX request
 
+    initTooltip = ->
+        $('[data-toggle="tooltip"]').tooltip()
+
+    initNewFolder = ->
         $("#new_folder").on "click", ->
             $(this).prop("disabled", true)
             insertObject("directory", true)
@@ -77,14 +90,7 @@
             .done (response) ->
                 $("#new_folder").prop("disabled", false)
 
-        $('[data-toggle="tooltip"]').tooltip()
-        breadcrumb()
-        uploader()
-        initRename()
-        initFileSelection()
-        initDeletion()
-
-    breadcrumb = ->
+    initBreadcrumb = ->
         fullPath = $("#file_system").data("dirpath")
 
         if fullPath is '/'
@@ -95,7 +101,7 @@
             currentLink += "/#{node}"
             $(".breadcrumb").append("""<li class="breadcrumb-item"><a href="#{currentLink}">#{node}</a></li>""")
 
-    uploader = ->
+    initUpload = ->
         $("#fileupload").on "change", ->
             files = this.files
             maxFileSize = $("#file_system").data("maxfilesize") - 512 # Consider POST overhead
@@ -159,7 +165,7 @@
         if objectType is "directory"
             return $(objectModel).prependTo( "#file_system" )
         else if objectType is "file"
-            return $(objectModel).appendTo( "#file_system" )
+            return $(objectModel).hide().appendTo( "#file_system" ).fadeIn(500)
 
     populateMeta = (object, objectType, objectMeta) ->
         if not objectMeta.pathinfo.dirname
@@ -235,7 +241,7 @@
         if not object
             object = $("#file_system .object")
 
-        object.single_double_click(
+        object.singleDoubleClick(
             (() ->
                 $(this).toggleClass("selected")),
             (() ->
@@ -246,6 +252,10 @@
     initDeletion = () ->
         $("#delete_object").on "click", ->
             selectedFiles = $(".selected")
+
+            if selectedFiles.length is 0
+                alert "Please select object(s) first"
+                return false
 
             $(this).prop("disabled", true)
 
@@ -260,13 +270,13 @@
                     dataType: "json"
                 .success ->
                     # Remove form and populate meta data
-                    $(file).fadeOut 800, ->
+                    $(file).fadeOut 500, ->
                         $(this).parent().remove()
                 .fail ->
                     # Show error message
                     alert("""Failed to delete #{fileType} #{$(file).data("basename")}""")
-
-            $("#delete_object").prop("disabled", false) # Enable delete button
+                .done ->
+                    $("#delete_object").prop("disabled", false) # Enable delete button
 
     return init()
 
