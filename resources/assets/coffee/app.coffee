@@ -68,10 +68,11 @@
             .success (response) ->
                 # Remove form and populate meta data
                 populateMeta(currentObject, "directory", response)
+                initFileSelection(currentObject)
             .fail (response) ->
                 # Show error message
                 alert("Failed to create the folder")
-                $("#file_system .object").first().removeClass("uploading")
+                $(this).parents(".object").removeClass("uploading")
                 .find("input-folder").focus().select()
             .done (response) ->
                 $("#new_folder").prop("disabled", false)
@@ -118,10 +119,10 @@
                 $(responses.errors).each (index, error) ->
                     console.log error
                 $(responses.success).each (index, file) ->
-                    console.log file
                     newObject = $(insertObject("file", false)).children()
                     populateMeta(newObject, "file", file)
                     newObject.find(".name").append(""" <a href="#" class="hide rename"><span class="glyphicon glyphicon-pencil" aria-hidden="true"></a>""")
+                    initFileSelection(newObject)
             .fail ->
                 alert("Upload failed")
 
@@ -231,12 +232,17 @@
         object.find(".name a").hide()
         $(nameInput).prependTo(object.find(".name")).find("#input-file").focus().select()
 
-    initFileSelection = ->
-        $("#file_system .object").single_double_click(
+    initFileSelection = (object) ->
+        if not object
+            object = $("#file_system .object")
+
+        object.single_double_click(
             (() ->
                 $(this).toggleClass("selected")),
             (() ->
-                window.location = ($(this).find(".link").attr("href"))
+                if ($(this).data("filetype") is "directory")
+                    $("#file_system").addClass("loading")
+                window.location = ($(this).find(".link").attr("href"))))
 
     initDeletion = () ->
         $("#delete_object").on "click", ->
